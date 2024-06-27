@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest(classes = LecturesApplication.class)
+@SpringBootTest
 public class LectureServiceImplTest {
     @Autowired
     private LectureService lectureService;
@@ -90,7 +90,49 @@ public class LectureServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("비관적락을 사용한 동시성 테스트")
+    public void pessimisticTest () throws InterruptedException, ExecutionException {
 
+
+
+        Lecture lecture = lectureRepository.findAll().get(0);
+
+        int cnt = 35;
+        ExecutorService executorService = Executors.newFixedThreadPool(cnt);
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+
+        for (int i = 1; i<=cnt; i++) {
+            final  long userId = i;
+            tasks.add(() -> {
+                try {
+                    return lectureService.applyLecture(userId, lecture.getId());
+                } catch (Exception e) {
+                    return false;
+                }
+            });
+        }
+
+        List<Future<Boolean>> results = executorService.invokeAll(tasks);
+
+        int successCnt = 0;
+        int failCnt = 0;
+
+        for(Future<Boolean> result : results) {
+            if(result.get()) {
+                successCnt++;
+            } else {
+                failCnt++;
+            }
+        }
+
+        executorService.shutdown();
+
+        assertThat(successCnt).isEqualTo(30);
+        assertThat(failCnt).isEqualTo(5);
+
+
+    }
 
 
 }
