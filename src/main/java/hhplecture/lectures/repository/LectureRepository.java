@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.Lock;
 
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Lecture findByIdWithLock(Long id);
+    Lecture findByIdWithLock(Long id);//
 }
