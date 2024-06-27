@@ -45,7 +45,7 @@ public class LectureServiceImpl implements LectureService{
         Lecture lecture = entityManager.find(Lecture.class, lectureId, LockModeType.PESSIMISTIC_WRITE);
 //        Lecture lecture = lectureRepository.findByIdWithLock(lectureId);
 
-        //userId, 와 lectureId로 조회 시 존재하면 이미 신청한 강의이므로 false반환.
+        //userId, 와 lectureId로 조회 시 존재하면 이미 신청한 강의이므로 false반환..
         if(lectureApplicationRepository.existsByUserIdAndLectureId(userId,lectureId)) {
             return false;
         }
