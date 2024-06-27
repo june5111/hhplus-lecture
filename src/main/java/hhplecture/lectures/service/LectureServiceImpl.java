@@ -34,7 +34,7 @@ public class LectureServiceImpl implements LectureService{
     }
 
     /**
-     * 강의 신청 (비관적 락 사용.)
+     * 강의 신청 (비관적 락 사용.)dd
      * @param userId
      * @param lectureId
      * @return
